@@ -1,0 +1,59 @@
+services:
+  pump1:
+    build: .
+    container_name: torque-pump-1
+    environment:
+      PYTHONUNBUFFERED: 1
+      MODBUS_PORT: "502"
+      SLAVE_ID: "1"
+    ports:
+      - "0.0.0.0:5021:502/tcp"
+    restart: unless-stopped
+    # Para macvlan: elimina ports y descomenta networks.
+    # networks:
+    #   modbus_lan:
+    #     ipv4_address: 192.168.1.201
+
+  pump2:
+    build: .
+    container_name: torque-pump-2
+    environment:
+      PYTHONUNBUFFERED: 1
+      MODBUS_PORT: "502"
+      SLAVE_ID: "2"
+    ports:
+      - "0.0.0.0:5022:502/tcp"
+    restart: unless-stopped
+    # Para macvlan: elimina ports y descomenta networks.
+    # networks:
+    #   modbus_lan:
+    #     ipv4_address: 192.168.1.202
+
+  pump3:
+    build: .
+    container_name: torque-pump-3
+    environment:
+      PYTHONUNBUFFERED: "1"
+      MODBUS_PORT: "502"
+      SLAVE_ID: "3"
+    ports:
+      - "0.0.0.0:5023:502/tcp"
+    restart: unless-stopped
+    # Para macvlan: elimina ports y descomenta networks.
+    # networks:
+    #   modbus_lan:
+    #     ipv4_address: 192.168.1.203
+
+# OPCION B (Linux): macvlan para asignar una IP de la LAN a cada bomba.
+# Cambia parent, subnet y gateway por los de tu red; las IPs de arriba deben
+# estar fuera del rango DHCP. Descomenta esta red para activar la variante.
+#
+#networks:
+#  modbus_lan:
+#    driver: macvlan
+#    driver_opts:
+#      parent: enp3s0
+#    ipam:
+#      config:
+#        - subnet: 192.168.1.0/24
+#          gateway: 192.168.1.1
